@@ -15,7 +15,7 @@ project-root/
 │   │       └── context-template.md
 │   │
 │   ├── 10_contexts/                         # bounded-context単位の設計（コードと1:1）
-│   │   └── <ctx>/                           # 例: audio / billing / identity ...
+│   │   └── <ctx>/                           # 例: task / user ...
 │   │       ├── _index.md                    # 入口（必須）
 │   │       ├── context.md                   # 境界/責務/依存
 │   │       ├── domain/
@@ -34,81 +34,82 @@ project-root/
 │       ├── adr-index.md
 │       └── 2026-xx-xx-adr-0001.md
 │
-├── modules/                                 # 💻 実装（bounded-context単位）
-│   └── <ctx>/
-│       ├── domain/                          # 外部依存なし（純粋ドメイン）
-│       │   ├── aggregates/
-│       │   ├── entities/
-│       │   ├── value-objects/
-│       │   ├── services/
-│       │   ├── events/
-│       │   └── repositories/                # IFのみ（実装はinfra）
-│       │
-│       ├── application/                     # ユースケース（オーケストレーション）
-│       │   ├── commands/
-│       │   ├── queries/
-│       │   ├── handlers/
-│       │   ├── dtos/
-│       │   └── policies/
-│       │
-│       ├── infrastructure/                  # DB/外部API/Queueなど
-│       │   ├── persistence/                 # repository実装
-│       │   ├── external/                    # 外部サービスAdapter
-│       │   ├── messaging/                   # outbox, publisherなど
-│       │   └── configs/
-│       │
-│       └── presentation/                    # 入口（種類で分ける）
-│           ├── http/                        # REST/Controllers/Routes/Validators
-│           ├── messaging/                   # consumer/subscriber/webhook等
-│           └── jobs/                        # batch/cron/worker
-│
-├── shared_kernel/                           # 🔒 Shared Kernel（“共通ゴミ箱化”防止）
-│   ├── types/
-│   ├── errors/
-│   ├── ids/
-│   ├── datetime/
-│   └── utils/                               # “薄い汎用”のみ（ドメイン知識禁止）
-│
-├── migrations/                              # 🗄️ DB移行（ctx単位で標準化）
-│   └── <ctx>/
-│       ├── 0001_init.sql
-│       ├── 0002_expand_add_x.sql
-│       └── 0003_contract_drop_y.sql
-│
-├── tests/                                   # ✅ テスト（ctx別が基本）
-│   ├── _shared/                             # テスト専用共通（shared_kernelとは別）
-│   │   ├── builders/
-│   │   ├── fixtures/
-│   │   ├── fakes/
-│   │   ├── matchers/
-│   │   └── testkit/
+├── apps/                                    # 🚀 アプリケーション
+│   ├── api/                                 # バックエンド（Hono + DDD）
+│   │   ├── modules/                         # bounded-context実装
+│   │   │   └── <ctx>/
+│   │   │       ├── domain/
+│   │   │       ├── application/
+│   │   │       ├── infrastructure/
+│   │   │       └── presentation/
+│   │   │
+│   │   ├── shared_kernel/                   # 🔒 Shared Kernel（API内共通）
+│   │   │   ├── types/
+│   │   │   ├── errors/
+│   │   │   ├── ids/
+│   │   │   ├── datetime/
+│   │   │   └── utils/
+│   │   │
+│   │   ├── migrations/                      # DB移行（ctx単位）
+│   │   │   └── <ctx>/
+│   │   │
+│   │   ├── tests/                           # テスト
+│   │   │   ├── _shared/
+│   │   │   │   ├── builders/
+│   │   │   │   ├── fixtures/
+│   │   │   │   ├── fakes/
+│   │   │   │   ├── matchers/
+│   │   │   │   └── testkit/
+│   │   │   ├── <ctx>/
+│   │   │   │   ├── unit/
+│   │   │   │   │   ├── domain/
+│   │   │   │   │   └── application/
+│   │   │   │   ├── integration/
+│   │   │   │   │   ├── persistence/
+│   │   │   │   │   ├── migrations/
+│   │   │   │   │   └── external/
+│   │   │   │   └── contract/
+│   │   │   │       └── http/
+│   │   │   └── e2e/
+│   │   │       └── scenarios/
+│   │   │
+│   │   ├── tools/
+│   │   │   └── architecture-tests/
+│   │   ├── index.ts                         # エントリポイント
+│   │   ├── package.json
+│   │   ├── tsconfig.json
+│   │   └── drizzle.config.ts
 │   │
-│   ├── <ctx>/
-│   │   ├── unit/
-│   │   │   ├── domain/
-│   │   │   └── application/
-│   │   ├── integration/
-│   │   │   ├── persistence/
-│   │   │   ├── migrations/
-│   │   │   └── external/
-│   │   └── contract/
-│   │       └── http/                        # HTTPリクエスト/レスポンス/status/validation
-│   │
-│   └── e2e/                                 # クリティカルパスのみ（少数）
-│       └── scenarios/
+│   └── web/                                 # フロントエンド（Next.js）
+│       ├── src/
+│       │   ├── app/                         # App Router
+│       │   │   ├── layout.tsx
+│       │   │   ├── page.tsx
+│       │   │   └── tasks/
+│       │   ├── components/                  # UIコンポーネント
+│       │   │   ├── ui/                      # shadcn/ui コンポーネント
+│       │   │   └── features/                # 機能単位コンポーネント
+│       │   └── lib/                         # ユーティリティ・APIクライアント
+│       ├── public/
+│       ├── package.json
+│       ├── tsconfig.json
+│       └── next.config.ts
 │
-├── tools/
-│   └── architecture-tests/                  # 依存ルール違反をCIで落とす
-│       ├── README.md
-│       └── check-deps.(sh|ps1|js|py)         # 言語に合わせて実装
-│
-├── scripts/                                 # 補助スクリプト（ローカル作業/CI補助）
+├── packages/                                # 📦 共有パッケージ
+│   └── shared/                              # フロント・バック共通
+│       ├── src/
+│       │   ├── types/                       # APIリクエスト/レスポンス型
+│       │   ├── schemas/                     # Zodスキーマ（共通バリデーション）
+│       │   └── constants/                   # 共通定数
+│       └── package.json
 │
 ├── .github/
 │   ├── pull_request_template.md
 │   └── workflows/
 │       └── ci.yml
 │
-├── CLAUDE.md                                # Claude Code向けの最小運用ルール
+├── package.json                             # Bun workspaces ルート
+├── biome.json                               # 共通Lint/Format設定
+├── CLAUDE.md
 ├── README.md
 └── .gitignore
