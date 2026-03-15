@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Task Manager",
@@ -12,7 +13,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ja">
-      <body>{children}</body>
+      <body className="min-h-screen bg-gray-50">
+          <main className="max-w-2xl mx-auto px-4 py-8">{children}</main>
+        </body>
     </html>
   );
 }
