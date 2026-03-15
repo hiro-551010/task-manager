@@ -95,6 +95,12 @@ project-root/
 │       │   │   ├── ui/                      # shadcn/ui コンポーネント
 │       │   │   └── features/                # 機能単位コンポーネント
 │       │   └── lib/                         # ユーティリティ・APIクライアント
+│       ├── e2e/                             # E2E テスト（Playwright）
+│       │   ├── playwright.config.ts
+│       │   ├── smoke/                       # スモークテスト（ページ正常表示確認）
+│       │   ├── scenarios/                   # シナリオテスト（正常系・異常系）
+│       │   │   └── <ctx>/
+│       │   └── fixtures/                    # DB セットアップ・teardown
 │       ├── public/
 │       ├── package.json
 │       ├── tsconfig.json
