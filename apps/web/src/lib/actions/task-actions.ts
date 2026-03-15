@@ -2,42 +2,47 @@
 
 import { revalidatePath } from "next/cache";
 import { tasksApi } from "../api/tasks";
-import { createTaskSchema, updateTaskSchema, changeTaskStatusSchema } from "@task-manager/shared";
+import { changeTaskStatusSchema } from "@task-manager/shared";
+
+function toISODatetime(dateStr: string): string {
+  return new Date(dateStr).toISOString();
+}
 
 export async function createTask(_: unknown, formData: FormData) {
-  const raw = {
-    title: formData.get("title"),
-    dueDate: formData.get("dueDate") || undefined,
-  };
-  const parsed = createTaskSchema.safeParse(raw);
-  if (!parsed.success) {
-    return { error: parsed.error.errors[0].message };
-  }
+  const title = formData.get("title") as string;
+  const rawDueDate = formData.get("dueDate") as string;
+
+  if (!title || title.trim() === "") return { error: "タイトルを入力してください", success: false };
+  if (title.length > 100) return { error: "タイトルは100文字以内で入力してください", success: false };
+
   try {
-    await tasksApi.create(parsed.data);
+    await tasksApi.create({
+      title,
+      dueDate: rawDueDate ? toISODatetime(rawDueDate) : undefined,
+    });
     revalidatePath("/tasks");
-    return { error: null };
+    return { error: null, success: true };
   } catch (e) {
-    return { error: e instanceof Error ? e.message : "作成に失敗しました" };
+    return { error: e instanceof Error ? e.message : "作成に失敗しました", success: false };
   }
 }
 
 export async function updateTask(_: unknown, formData: FormData) {
   const id = formData.get("id") as string;
-  const raw = {
-    title: formData.get("title") || undefined,
-    dueDate: formData.get("dueDate") !== "" ? formData.get("dueDate") : null,
-  };
-  const parsed = updateTaskSchema.safeParse(raw);
-  if (!parsed.success) {
-    return { error: parsed.error.errors[0].message };
-  }
+  const title = formData.get("title") as string;
+  const rawDueDate = formData.get("dueDate") as string;
+
+  if (title && title.length > 100) return { error: "タイトルは100文字以内で入力してください", success: false };
+
   try {
-    await tasksApi.update(id, parsed.data);
+    await tasksApi.update(id, {
+      title: title || undefined,
+      dueDate: rawDueDate ? toISODatetime(rawDueDate) : null,
+    });
     revalidatePath("/tasks");
-    return { error: null };
+    return { error: null, success: true };
   } catch (e) {
-    return { error: e instanceof Error ? e.message : "更新に失敗しました" };
+    return { error: e instanceof Error ? e.message : "更新に失敗しました", success: false };
   }
 }
 

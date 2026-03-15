@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useRef } from "react";
+import { useActionState, useEffect, useRef } from "react";
 import type { TaskDto } from "@task-manager/shared";
 import { createTask, updateTask } from "@/lib/actions/task-actions";
 
@@ -10,22 +10,21 @@ type Props =
 
 export function TaskForm(props: Props) {
   const action = props.mode === "create" ? createTask : updateTask;
-  const [state, dispatch, isPending] = useActionState(action, { error: null });
+  const [state, dispatch, isPending] = useActionState(action, { error: null, success: false });
   const formRef = useRef<HTMLFormElement>(null);
 
-  async function handleAction(formData: FormData) {
-    await dispatch(formData);
-    if (!state?.error) {
+  useEffect(() => {
+    if (state.success) {
       formRef.current?.reset();
       props.onClose();
     }
-  }
+  }, [state.success]);
 
   const task = props.mode === "edit" ? props.task : null;
   const dueDateValue = task?.dueDate ? task.dueDate.slice(0, 10) : "";
 
   return (
-    <form ref={formRef} action={handleAction} className="flex flex-col gap-3 p-4 border rounded-lg bg-white">
+    <form ref={formRef} action={dispatch} className="flex flex-col gap-3 p-4 border rounded-lg bg-white">
       {task && <input type="hidden" name="id" value={task.id} />}
 
       <div className="flex flex-col gap-1">
