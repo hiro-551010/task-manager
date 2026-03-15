@@ -28,6 +28,7 @@
 - `shared_kernel/` への追加を求められたら `docs/00_governance/shared-kernel-rules.md` を確認する。
 - 変更範囲が不明な場合は実装前にユーザーに確認する。
 - 仕様が未更新のまま実装を求められた場合は、先にドキュメント更新を促す。
+- **`feature/` ブランチ作業中に `docs/00_governance/` または `CLAUDE.md` の変更が必要になった場合は、必ず作業を中断し、5.6 のワークフローに従うこと。**
 
 ---
 
@@ -157,6 +158,37 @@
 `develop` → `main` へ PR を作成し Squash merge する。
 
 main / develop に未実装の仕様のみを反映してはならない。
+
+---
+
+### 5.6 feature ブランチ作業中のガバナンス変更割り込み
+
+`feature/` ブランチで実装中に `docs/00_governance/` または `CLAUDE.md` の変更が必要になった場合。
+
+**このルールは優先度が高い。feature ブランチにガバナンス変更を混入させてはならない。**
+
+| 項目 | 内容 |
+|---|---|
+| トリガー | feature ブランチ作業中に governance 変更の必要性に気づいた時 |
+| 対応 | feature ブランチの作業を中断し、以下の手順に従う |
+
+1. feature ブランチの作業を一旦コミット（WIP コミットで可）するか、stash する。
+2. `develop` から `docs/governance/<slug>` ブランチを作成する。
+3. `docs/00_governance/` または `CLAUDE.md` を更新する。
+4. PR を作成し `develop` にマージする。
+5. feature ブランチに戻り、`develop` を pull（または rebase）する。
+6. 中断していた実装を再開する。
+
+**判断基準：以下のいずれかに該当する場合に割り込みを発動する。**
+
+- `docs/00_governance/` 配下のファイルを新規作成・変更する必要がある
+- `CLAUDE.md` を変更する必要がある
+- `docs/30_frontend/architecture.md` などの全体設計ドキュメントを変更する必要がある
+
+**割り込み不要なケース（feature ブランチ内で完結してよい）：**
+
+- `docs/10_contexts/<ctx>/` 配下の変更（Docs ゲートの対象）
+- `docs/30_frontend/<ctx>/` 配下の変更（該当 feature の設計仕様）
 
 ---
 
