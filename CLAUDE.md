@@ -72,14 +72,26 @@
 
 ---
 
-## 5. ワークフロー（ブランチ前提）
+## 5. ワークフロー
 
 **原則：ドキュメントは正本（Source of Truth）。実装はドキュメントに従う。**
 ドキュメントが更新されていない変更は、実装前であっても受け入れない。
 
-1. develop からブランチを作成する。
+作業種別によってブランチ運用と Docs ゲートの要否が異なる。
+
+---
+
+### 5.1 機能開発 / バグ修正
+
+| 項目 | 内容 |
+|---|---|
+| ブランチ | `feature/<ctx>/<slug>` / `fix/<ctx>/<slug>` |
+| Docs ゲート | 必須 |
+| マージ先 | `develop`（Squash merge） |
+
+1. `develop` からブランチを作成する。
 2. 対象 bounded-context とレイヤーを特定する。
-3. 該当ドキュメントを更新する（下記 Docs ゲートを参照）。
+3. 該当ドキュメントを更新する。
 4. **Docs ゲート**：以下を確認してから実装に進む。
    - domain 変更 → `docs/10_contexts/<ctx>/domain/model.md` `docs/10_contexts/<ctx>/domain/rules.md` が更新済みか
    - ユースケース追加・変更 → `docs/10_contexts/<ctx>/application/use-cases.md` が更新済みか
@@ -89,8 +101,37 @@
 6. テストを実行する。
 7. PR を作成し、docs と code が一致していることを確認する。
 8. PR を `develop` にマージ（Squash merge）後、ブランチを削除する。
-   - リリース時は `develop` → `main` へ PR を作成してマージする。
-   - ブランチ・マージの詳細は `docs/00_governance/git-rules.md` を参照。
+
+---
+
+### 5.2 環境・ツール変更
+
+パッケージ追加・Docker 設定・CI 設定・Biome/tsconfig 変更など。
+
+| 項目 | 内容 |
+|---|---|
+| ブランチ | `chore/<slug>` |
+| Docs ゲート | 不要（`docs/00_governance/` の更新は必要に応じて行う） |
+| マージ先 | `develop`（Squash merge） |
+
+1. `develop` からブランチを作成する。
+2. 変更を実施する。
+3. 影響があれば `docs/00_governance/` 内の該当ファイルを更新する。
+4. PR を作成し `develop` にマージする。
+
+---
+
+### 5.3 初期環境構築（例外）
+
+プロジェクト開始時の一回限りの環境構築は `develop` に直接コミットしてよい。
+
+---
+
+### 5.4 リリース
+
+`develop` → `main` へ PR を作成し Squash merge する。
+
+ブランチ・コミット・マージの詳細は `docs/00_governance/git-rules.md` を参照。
 
 main / develop に未実装の仕様のみを反映してはならない。
 
@@ -128,3 +169,4 @@ main / develop に未実装の仕様のみを反映してはならない。
 - shared_kernelの肥大化
 - 未実装仕様の main / develop マージ
 - 想定外例外の握りつぶし（UnexpectedErrorは必ずログ・監視対象）
+- コンテキストのドキュメント・コードに他の bounded-context 名を直接記載すること（境界の曖昧化につながる）
