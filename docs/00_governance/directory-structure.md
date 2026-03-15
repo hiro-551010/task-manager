@@ -30,9 +30,14 @@ project-root/
 │   │       │   └── schema.md                # DBスキーマ/移行方針（Expand/Contract）
 │   │       └── adr/                         # ctx固有ADR
 │   │
-│   └── 20_decisions/                        # 全体ADR（横断意思決定）
-│       ├── adr-index.md
-│       └── 2026-xx-xx-adr-0001.md
+│   ├── 20_decisions/                        # 全体ADR（横断意思決定）
+│   │   ├── adr-index.md
+│   │   └── 2026-xx-xx-adr-0001.md
+│   │
+│   └── 30_frontend/                         # 🖥️ フロントエンド設計（apps/web と1:1）
+│       ├── architecture.md                  # 全体アーキテクチャ（RSC/Server Actions/レイヤー構成）
+│       └── <ctx>/                           # bounded-context 対応の UI 設計
+│           └── _index.md                    # ページ・コンポーネント設計
 │
 ├── apps/                                    # 🚀 アプリケーション
 │   ├── api/                                 # バックエンド（Hono + DDD）
