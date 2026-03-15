@@ -10,6 +10,8 @@
 
 ### 詳細ルール（該当作業時に必ず読むこと）
 
+- 実装順序：`docs/00_governance/implementation-order.md`（新規コンテキスト実装時）
+- 命名規則：`docs/00_governance/naming-conventions.md`（アプリケーション層実装時）
 - テストポリシー：`docs/00_governance/test-policy.md`（テスト作成・修正時）
 - 例外処理ポリシー：`docs/00_governance/error-policy.md`（実装時）
 - Shared Kernelルール：`docs/00_governance/shared-kernel-rules.md`（`shared_kernel/` 変更時）

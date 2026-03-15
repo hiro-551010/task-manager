@@ -1,6 +1,6 @@
-# 命名規則メモ
+# 命名規則
 
-## アプリケーション層の命名
+## アプリケーション層
 
 コンテキスト名（例：`task`）はファイルパスで表現されるため、クラス名に繰り返さない。
 
@@ -10,7 +10,7 @@
 | クエリ | 動詞のみ | `Get` / `GetAll` |
 | ハンドラー | 動詞 + コンテキスト名 + Handler | `CreateTaskHandler` / `GetTaskHandler` |
 
-## 理由
+### 理由
 
 - パス（`modules/task/application/commands/create.ts`）がコンテキストを示している
 - コマンド・クエリ名での繰り返しは冗長
