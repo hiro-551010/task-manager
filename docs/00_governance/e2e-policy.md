@@ -24,6 +24,8 @@ Playwright を使用したブラウザ自動化テスト。フロントエンド
 apps/web/
 └── e2e/
     ├── playwright.config.ts
+    ├── reporters/
+    │   └── error-reporter.ts       # 失敗時に error-report.json を出力
     ├── smoke/
     │   └── health.spec.ts          # 全ページ正常表示確認
     ├── scenarios/
@@ -32,8 +34,11 @@ apps/web/
     │       ├── update.spec.ts      # タスク更新（正常系・異常系）
     │       ├── status.spec.ts      # ステータス変更（正常系・不正遷移）
     │       └── delete.spec.ts      # タスク削除（正常系・存在しない ID）
-    └── fixtures/
-        └── db.ts                   # テスト DB セットアップ・teardown
+    ├── fixtures/
+    │   └── db.ts                   # テスト DB truncate
+    ├── test-results/               # スクリーンショット・トレース（gitignore）
+    ├── playwright-report/          # HTML レポート（gitignore）
+    └── error-report.json           # エラー出力（gitignore）
 ```
 
 ---
@@ -51,10 +56,13 @@ apps/web/
 
 ### リセット方針
 
-**テストスイート開始時に全テーブルを truncate する。**
+**各テストケース実行前に全テーブルを truncate する。**
 
-- 各 `spec` ファイルの `beforeAll` で truncate を実行する
-- テストケース間は状態を引き継ぐ（ロールバックは使用しない）
+- 各 `spec` ファイルの `beforeEach`（describe 外）で truncate を実行する
+- テスト DB を複数 spec で共有するためシリアル実行（`workers: 1`）
+- ロールバックは使用しない（truncate + 再作成）
+
+> **理由：** テスト DB が spec 間で共有されるため、並列実行すると truncate の race condition が発生する。`workers: 1` でシリアル実行し、各テストを完全分離する。
 
 ---
 
