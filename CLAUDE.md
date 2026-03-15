@@ -1,5 +1,7 @@
 # Claude Code Operating Model（DDD + Obsidian運用）
 
+**設計方針：** このファイルは特定の技術スタックに依存しない粒度で記述する。プロジェクト固有のものはdocs/00_governance直下に集約し、そのファイルパスをCLAUDE.mdに記述する。
+
 ## 0. Claude Codeへの指示
 
 ### 参照ファイル（作業前に必ず読むこと）
@@ -57,9 +59,10 @@
 
 詳細は `docs/00_governance/directory-structure.md` を参照すること。
 
-- `modules/<ctx>/` と `docs/10_contexts/<ctx>/` は 1:1 対応する。
-- `shared_kernel/` はドメイン知識を含めない。
-- DB変更は `migrations/<ctx>/` でコンテキスト単位に管理する。
+- bounded-context の実装ディレクトリと `docs/10_contexts/<ctx>/` は 1:1 対応する。
+- shared kernel はドメイン知識を含めない。
+- 複数アプリ間で共有するコードは専用パッケージに分離し、ドメイン知識を含めない。
+- DB変更はコンテキスト単位で管理する。
 
 ---
 
