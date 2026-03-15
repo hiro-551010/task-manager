@@ -2,11 +2,25 @@
 
 ## プロジェクト概要
 
-タスク管理 Web API。ステータス遷移・期限管理を中心とした DDD 実装の練習を兼ねる。
+タスク管理 Web アプリ。バックエンドは DDD + Hono、フロントエンドは Next.js による構成。Bun workspaces によるモノレポで管理する。
+
+---
+
+## モノレポ構成
+
+Bun workspaces によるモノレポ。
+
+| パス | 内容 |
+|---|---|
+| `apps/api` | バックエンド（Hono + DDD） |
+| `apps/web` | フロントエンド（Next.js） |
+| `packages/shared` | フロント・バック共通の型・スキーマ・定数 |
 
 ---
 
 ## コア技術
+
+### バックエンド（apps/api）
 
 | 役割 | 技術 | バージョン |
 |---|---|---|
@@ -18,13 +32,31 @@
 | バリデーション | Zod | 3.x |
 | マイグレーション | drizzle-kit | Drizzle ORM に同梱 |
 
+### フロントエンド（apps/web）
+
+| 役割 | 技術 | バージョン |
+|---|---|---|
+| フレームワーク | Next.js（App Router） | 15.x |
+| UI ライブラリ | React | 19.x |
+| スタイリング | Tailwind CSS | 4.x |
+| コンポーネント | shadcn/ui | 最新安定版 |
+| バリデーション | Zod（packages/shared と共有） | 3.x |
+
+### 共有パッケージ（packages/shared）
+
+| 内容 | 説明 |
+|---|---|
+| `types/` | API リクエスト/レスポンス型定義 |
+| `schemas/` | Zod スキーマ（フロント・バック共通バリデーション） |
+| `constants/` | 共通定数（ステータス値など） |
+
 ---
 
 ## 開発ツール
 
 | 役割 | 技術 |
 |---|---|
-| パッケージマネージャー | bun |
+| パッケージマネージャー / ワークスペース | Bun workspaces |
 | テスト | Vitest |
 | Lint | Biome |
 | フォーマット | Biome |
@@ -35,18 +67,29 @@
 ## 主要コマンド
 
 ```bash
-bun install                  # 依存インストール
-bun run dev                  # 開発サーバー起動
-bun run test                 # テスト実行
-bun run lint                 # Lint
-bun run migrate              # マイグレーション実行（drizzle-kit migrate）
-bun run migrate:generate     # マイグレーションファイル生成（drizzle-kit generate）
-docker compose up -d         # ローカル DB 起動
+bun install                      # 全パッケージの依存インストール
+bun run dev                      # 全アプリ開発サーバー起動
+bun run --filter api dev         # API のみ起動
+bun run --filter web dev         # Web のみ起動
+bun run test                     # 全テスト実行
+bun run lint                     # Lint（全体）
+bun run migrate                  # マイグレーション実行
+docker compose up -d             # ローカル DB 起動
 ```
 
 ---
 
 ## 技術選定の理由
+
+### Next.js（App Router）
+- React Server Components によりサーバーサイドでのデータフェッチが可能
+- App Router でファイルベースルーティングを簡潔に管理できる
+- Bun との親和性が高く、モノレポで統一したランタイムを使用できる
+
+### shadcn/ui
+- Tailwind CSS ベースで自由にカスタマイズ可能
+- コンポーネントのソースコードをプロジェクトにコピーして管理するため、外部依存を最小化できる
+- アクセシビリティ対応済みのコンポーネントを即座に利用できる
 
 ### Hono
 - TypeScript ファーストで presentation 層の型安全を確保できる

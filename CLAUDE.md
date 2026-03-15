@@ -1,5 +1,7 @@
 # Claude Code Operating Model（DDD + Obsidian運用）
 
+**設計方針：** このファイルは特定の技術スタックに依存しない粒度で記述する。プロジェクト固有のものはdocs/00_governance直下に集約し、そのファイルパスをCLAUDE.mdに記述する。
+
 ## 0. Claude Codeへの指示
 
 ### 参照ファイル（作業前に必ず読むこと）
@@ -10,6 +12,8 @@
 
 ### 詳細ルール（該当作業時に必ず読むこと）
 
+- 実装順序：`docs/00_governance/implementation-order.md`（新規コンテキスト実装時）
+- 命名規則：`docs/00_governance/naming-conventions.md`（アプリケーション層実装時）
 - テストポリシー：`docs/00_governance/test-policy.md`（テスト作成・修正時）
 - 例外処理ポリシー：`docs/00_governance/error-policy.md`（実装時）
 - Shared Kernelルール：`docs/00_governance/shared-kernel-rules.md`（`shared_kernel/` 変更時）
@@ -55,9 +59,10 @@
 
 詳細は `docs/00_governance/directory-structure.md` を参照すること。
 
-- `modules/<ctx>/` と `docs/10_contexts/<ctx>/` は 1:1 対応する。
-- `shared_kernel/` はドメイン知識を含めない。
-- DB変更は `migrations/<ctx>/` でコンテキスト単位に管理する。
+- bounded-context の実装ディレクトリと `docs/10_contexts/<ctx>/` は 1:1 対応する。
+- shared kernel はドメイン知識を含めない。
+- 複数アプリ間で共有するコードは専用パッケージに分離し、ドメイン知識を含めない。
+- DB変更はコンテキスト単位で管理する。
 
 ---
 
@@ -76,6 +81,8 @@
 
 **原則：ドキュメントは正本（Source of Truth）。実装はドキュメントに従う。**
 ドキュメントが更新されていない変更は、実装前であっても受け入れない。
+
+ブランチ命名・コミット規約・マージ方法の詳細は `docs/00_governance/git-rules.md` を参照すること。
 
 作業種別によってブランチ運用と Docs ゲートの要否が異なる。
 
@@ -104,7 +111,25 @@
 
 ---
 
-### 5.2 環境・ツール変更
+### 5.2 ガバナンス変更
+
+`docs/00_governance/` や `CLAUDE.md` 自体の変更。プロジェクト全体に影響するため、事前に `notes/discussion/` で合意を取ってから実施する。
+
+| 項目 | 内容 |
+|---|---|
+| ブランチ | `docs/governance/<slug>` |
+| Docs ゲート | 不要（ドキュメント自体が目的） |
+| マージ先 | `develop`（Squash merge） |
+
+1. `notes/discussion/` で変更内容を議論・合意する。
+2. `develop` からブランチを作成する。
+3. `docs/00_governance/` または `CLAUDE.md` を更新する。
+4. コードへの影響がある場合は **別途 `feature/` または `chore/` ブランチ**で対応する（このブランチにコードを含めない）。
+5. PR を作成し `develop` にマージする。
+
+---
+
+### 5.3 環境・ツール変更
 
 パッケージ追加・Docker 設定・CI 設定・Biome/tsconfig 変更など。
 
@@ -121,17 +146,15 @@
 
 ---
 
-### 5.3 初期環境構築（例外）
+### 5.4 初期環境構築（例外）
 
 プロジェクト開始時の一回限りの環境構築は `develop` に直接コミットしてよい。
 
 ---
 
-### 5.4 リリース
+### 5.5 リリース
 
 `develop` → `main` へ PR を作成し Squash merge する。
-
-ブランチ・コミット・マージの詳細は `docs/00_governance/git-rules.md` を参照。
 
 main / develop に未実装の仕様のみを反映してはならない。
 
