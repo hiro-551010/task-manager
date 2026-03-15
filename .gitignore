@@ -6,9 +6,6 @@
 # 依存
 node_modules/
 
-# Bun
-bun.lockb
-
 # ビルド成果物
 dist/
 build/
