@@ -8,6 +8,7 @@ main          # リリース済み・常に動作する状態
     ├── feature/<ctx>/<slug>
     ├── fix/<ctx>/<slug>
     ├── docs/<ctx>/<slug>
+    ├── docs/governance/<slug>
     ├── refactor/<ctx>/<slug>
     └── chore/<slug>          # ctx に依存しない場合は省略可
 ```
@@ -24,7 +25,8 @@ main          # リリース済み・常に動作する状態
 |---|---|---|
 | `feature/` | 新機能 | `feature/task/add-status-transition` |
 | `fix/` | バグ修正 | `fix/task/invalid-status-error` |
-| `docs/` | ドキュメントのみの変更 | `docs/task/update-use-cases` |
+| `docs/<ctx>/` | コンテキスト仕様ドキュメントのみの変更 | `docs/task/update-use-cases` |
+| `docs/governance/` | ガバナンスドキュメント変更（`docs/00_governance/`・`CLAUDE.md`） | `docs/governance/add-docs-workflow` |
 | `refactor/` | 振る舞いを変えないリファクタ | `refactor/task/extract-value-object` |
 | `chore/` | ビルド・CI・依存更新等 | `chore/update-drizzle` |
 
