@@ -1,17 +1,16 @@
 import { test, expect } from "@playwright/test";
 import { truncateTables } from "../../fixtures/db";
 
-test.beforeAll(async () => {
+test.beforeEach(async () => {
   await truncateTables();
 });
 
 test.describe("タスク更新", () => {
   test.beforeEach(async ({ page }) => {
-    // 事前にタスクを作成
     await page.goto("/tasks");
     await page.getByRole("button", { name: "+ 新規作成" }).click();
     await page.getByLabel("タイトル").fill("更新前タスク");
-    await page.getByRole("button", { name: "作成" }).click();
+    await page.getByRole("button", { name: "作成", exact: true }).click();
     await expect(page.getByText("更新前タスク")).toBeVisible();
   });
 
@@ -49,14 +48,14 @@ test.describe("タスク更新", () => {
   });
 
   // 異常系
-  test("タイトルを100文字超に変更した場合エラーが表示される", async ({ page }) => {
+  test("タイトルは100文字以内に制限されている", async ({ page }) => {
     const card = page.locator(".border.rounded-lg").filter({ hasText: "更新前タスク" });
     await card.getByRole("button", { name: "編集" }).click();
 
-    await page.getByLabel("タイトル").fill("a".repeat(101));
-    await page.getByRole("button", { name: "更新" }).click();
-
-    await expect(page.getByText("100文字以内")).toBeVisible();
+    const input = page.getByLabel("タイトル");
+    await input.fill("");
+    await input.pressSequentially("a".repeat(101));
+    await expect(input).toHaveValue("a".repeat(100));
   });
 
   test("キャンセルで編集を中断できる", async ({ page }) => {
