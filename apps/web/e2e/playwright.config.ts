@@ -9,13 +9,17 @@ const TEST_DB_URL =
 const webDir = path.join(__dirname, ".."); // apps/web/
 const repoRoot = path.join(__dirname, "../../.."); // monorepo root
 
+// すべての出力を e2e/ 配下に集約
+const outputDir = __dirname; // apps/web/e2e/
+
 export default defineConfig({
   testDir: ".",
   testMatch: ["smoke/**/*.spec.ts", "scenarios/**/*.spec.ts"],
   workers: 1, // テスト DB を共有するためシリアル実行
+  outputDir: path.join(outputDir, "test-results"),
   reporter: [
-    ["html", { outputFolder: "../playwright-report" }],
-    ["./reporters/error-reporter.ts", { outputFile: "./error-report.json" }],
+    ["html", { outputFolder: path.join(outputDir, "playwright-report") }],
+    ["./reporters/error-reporter.ts", { outputFile: path.join(outputDir, "error-report.json") }],
   ],
   use: {
     baseURL: "http://localhost:4000",

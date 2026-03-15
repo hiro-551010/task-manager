@@ -24,3 +24,8 @@ Thumbs.db
 
 # ログ
 *.log
+
+# E2E テスト成果物
+apps/web/e2e/test-results/
+apps/web/e2e/playwright-report/
+apps/web/e2e/error-report.json
