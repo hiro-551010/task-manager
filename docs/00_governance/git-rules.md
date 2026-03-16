@@ -28,7 +28,7 @@ main          # リリース済み・常に動作する状態
 | `docs/<ctx>/` | `docs/10_contexts/<ctx>/` 配下のドキュメントのみの変更 | `docs/task/update-use-cases` |
 | `docs/governance/` | ガバナンスドキュメント変更（`docs/00_governance/`・`CLAUDE.md`） | `docs/governance/add-docs-workflow` |
 | `refactor/` | 振る舞いを変えないリファクタ | `refactor/task/extract-value-object` |
-| `chore/` | ビルド・CI・依存更新等 | `chore/update-drizzle` |
+| `chore/` | ビルド・CI・依存更新・`docs/01_project/` 変更等 | `chore/update-drizzle` |
 
 ---
 

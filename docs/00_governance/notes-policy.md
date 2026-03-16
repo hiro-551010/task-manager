@@ -28,7 +28,8 @@
 |---|---|
 | 技術調査・設計議論 | `docs/10_contexts/<ctx>/` 配下の該当ファイル |
 | 横断的な意思決定 | `docs/20_decisions/`（ADR として記録） |
-| ガバナンス変更 | `docs/00_governance/` または `CLAUDE.md` |
+| ガバナンス原則変更 | `docs/00_governance/` または `CLAUDE.md` |
+| プロジェクト固有設定変更 | `docs/01_project/`（ブランチは `chore/`） |
 
 昇格後、元の `notes/` ファイルは削除してよい（git 履歴に残るため）。
 
