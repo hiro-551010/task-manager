@@ -41,7 +41,7 @@
 ## 常に実行するチェック（全PR）
 
 - lint / format
-- `tools/architecture-tests/**`（依存ルール違反検知）
+- `tools/architecture-tests/**`（依存ルール違反検知）※未実装・今後導入予定
 - unit（全体 or 変更ctx）
   - 推奨：unitは全体（速い場合）
   - 重い場合：変更ctxのみ

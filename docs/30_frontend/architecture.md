@@ -113,6 +113,6 @@ app/<ctx>/page.tsx（RSC）
 
 ## 関連ドキュメント
 
-- 技術スタック：`docs/00_governance/tech-stack.md`
+- 技術スタック：`docs/01_project/tech-stack.md`
 - bounded-context 単位の UI 設計：`docs/30_frontend/<ctx>/_index.md`
 - バックエンド API 契約：`docs/10_contexts/<ctx>/interfaces/api.md`
