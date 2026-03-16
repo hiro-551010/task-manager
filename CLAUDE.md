@@ -94,13 +94,14 @@
 
 1. `develop` からブランチを作成する。
 2. 対象 bounded-context とレイヤーを特定する。
-3. 該当ドキュメントを更新する。
-4. **Docs ゲート**：以下を確認してから実装に進む。
+3. 該当ドキュメントを作成・更新し、コミットする（実装より先に行う）。
+4. **Docs ゲート**：ドキュメントが揃っていることを以下のチェックリストで確認し、ユーザーに提示してレビューを求める。
    - domain 変更 → `docs/10_contexts/<ctx>/domain/model.md` `docs/10_contexts/<ctx>/domain/rules.md` が更新済みか
    - ユースケース追加・変更 → `docs/10_contexts/<ctx>/application/use-cases.md` が更新済みか
    - API 変更 → `docs/10_contexts/<ctx>/interfaces/api.md` が更新済みか
    - DB 変更 → `docs/10_contexts/<ctx>/data/schema.md` が更新済みか
-5. 自己レビューで Docs ゲートを確認後、実装する。
+   - **ユーザーの指示に「確認不要」「確認をスキップ」等が明記されている場合は、このレビュー待ちをスキップして実装に進んでよい。**
+5. ユーザーの承認後、実装する。
 6. テストを実行する。
 7. PR を作成し、docs と code が一致していることを確認する。
 8. PR を `develop` にマージ（Squash merge）後、ブランチを削除する。
