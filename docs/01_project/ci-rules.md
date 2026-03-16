@@ -34,7 +34,7 @@
 - `tests/<ctx>/unit/**`（必須）
 - `tests/<ctx>/integration/**`（必須：infra/DB/migrations変更がある場合。推奨は常に実行）
 - `tests/<ctx>/contract/**`（必須：presentation/http または interfaces/api.md が変更された場合）
-- e2e は原則スキップ（nightlyで実行）
+- e2e は `apps/web/**` または `apps/api/**` の変更がある PR で自動実行（詳細は `docs/01_project/e2e-policy.md` を参照）
 
 ---
 

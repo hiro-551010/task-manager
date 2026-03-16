@@ -2,7 +2,7 @@
 
 ## 原則
 
-- `shared_kernel/` は **"薄い基盤" のみ**
+- `shared_kernel/`（配置場所：`apps/api/shared_kernel/`）は **"薄い基盤" のみ**
 - Bounded Context のビジネスルールを入れない
 - `shared_kernel` から `modules/<ctx>` への依存は禁止（片方向を守る）
 
