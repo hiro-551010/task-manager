@@ -1,45 +1,53 @@
+# ディレクトリ構造（このプロジェクト）
+
+汎用的な構造原則（DDDレイヤー・テスト構造・docs階層等）は `docs/00_governance/directory-structure.md` を参照すること。
+
+---
+
+```
 project-root/
 ├── .obsidian/                               # Obsidian設定（Vault化の中核）
 │
-├── notes/                                   # 📝 非公式ノート（Obsidianで管理）
-│   ├── til/                                 # 実装中の気づき・TIL
-│   ├── investigation/                       # バグ調査・技術調査ログ
-│   ├── discussion/                          # ADR化前の議論
-│   └── meetings/                            # ミーティングノート
+├── notes/                                   # 非公式ノート（Obsidianで管理）
+│   ├── til/
+│   ├── investigation/
+│   ├── discussion/
+│   └── meetings/
 │
-├── docs/                                    # 🧠 設計・仕様（正本）
-│   ├── 00_governance/
-│   │   ├── operating-model.md               # 運用ルール（Docsゲート/PR/ブランチ等）
+├── docs/                                    # 設計・仕様（正本）
+│   ├── 00_governance/                       # 汎用ガバナンス原則
 │   │   └── templates/
 │   │       ├── adr-template.md
 │   │       └── context-template.md
 │   │
+│   ├── 01_project/                          # プロジェクト固有設定
+│   │
 │   ├── 10_contexts/                         # bounded-context単位の設計（コードと1:1）
-│   │   └── <ctx>/                           # 例: task / user ...
-│   │       ├── _index.md                    # 入口（必須）
-│   │       ├── context.md                   # 境界/責務/依存
+│   │   └── <ctx>/
+│   │       ├── _index.md
+│   │       ├── context.md
 │   │       ├── domain/
-│   │       │   ├── model.md                 # 集約/Entity/VO
-│   │       │   ├── rules.md                 # 不変条件/バリデーション
-│   │       │   └── events.md                # ドメインイベント（必要なら）
+│   │       │   ├── model.md
+│   │       │   ├── rules.md
+│   │       │   └── events.md
 │   │       ├── application/
-│   │       │   └── use-cases.md             # コマンド/クエリ/入出力
+│   │       │   └── use-cases.md
 │   │       ├── interfaces/
-│   │       │   └── api.md                   # API契約
+│   │       │   └── api.md
 │   │       ├── data/
-│   │       │   └── schema.md                # DBスキーマ/移行方針（Expand/Contract）
-│   │       └── adr/                         # ctx固有ADR
+│   │       │   └── schema.md
+│   │       └── adr/
 │   │
 │   ├── 20_decisions/                        # 全体ADR（横断意思決定）
 │   │   ├── adr-index.md
 │   │   └── 2026-xx-xx-adr-0001.md
 │   │
-│   └── 30_frontend/                         # 🖥️ フロントエンド設計（apps/web と1:1）
-│       ├── architecture.md                  # 全体アーキテクチャ（RSC/Server Actions/レイヤー構成）
-│       └── <ctx>/                           # bounded-context 対応の UI 設計
-│           └── _index.md                    # ページ・コンポーネント設計
+│   └── 30_frontend/                         # フロントエンド設計（apps/web と1:1）
+│       ├── architecture.md
+│       └── <ctx>/
+│           └── _index.md
 │
-├── apps/                                    # 🚀 アプリケーション
+├── apps/                                    # アプリケーション
 │   ├── api/                                 # バックエンド（Hono + DDD）
 │   │   ├── modules/                         # bounded-context実装
 │   │   │   └── <ctx>/
@@ -48,7 +56,7 @@ project-root/
 │   │   │       ├── infrastructure/
 │   │   │       └── presentation/
 │   │   │
-│   │   ├── shared_kernel/                   # 🔒 Shared Kernel（API内共通）
+│   │   ├── shared_kernel/                   # Shared Kernel（API内共通）
 │   │   │   ├── types/
 │   │   │   ├── errors/
 │   │   │   ├── ids/
@@ -58,29 +66,27 @@ project-root/
 │   │   ├── migrations/                      # DB移行（ctx単位）
 │   │   │   └── <ctx>/
 │   │   │
-│   │   ├── tests/                           # テスト
+│   │   ├── tests/
 │   │   │   ├── _shared/
 │   │   │   │   ├── builders/
 │   │   │   │   ├── fixtures/
 │   │   │   │   ├── fakes/
 │   │   │   │   ├── matchers/
 │   │   │   │   └── testkit/
-│   │   │   ├── <ctx>/
-│   │   │   │   ├── unit/
-│   │   │   │   │   ├── domain/
-│   │   │   │   │   └── application/
-│   │   │   │   ├── integration/
-│   │   │   │   │   ├── persistence/
-│   │   │   │   │   ├── migrations/
-│   │   │   │   │   └── external/
-│   │   │   │   └── contract/
-│   │   │   │       └── http/
-│   │   │   └── e2e/
-│   │   │       └── scenarios/
+│   │   │   └── <ctx>/
+│   │   │       ├── unit/
+│   │   │       │   ├── domain/
+│   │   │       │   └── application/
+│   │   │       ├── integration/
+│   │   │       │   ├── persistence/
+│   │   │       │   ├── migrations/
+│   │   │       │   └── external/
+│   │   │       └── contract/
+│   │   │           └── http/
 │   │   │
 │   │   ├── tools/
 │   │   │   └── architecture-tests/
-│   │   ├── index.ts                         # エントリポイント
+│   │   ├── index.ts
 │   │   ├── package.json
 │   │   ├── tsconfig.json
 │   │   └── drizzle.config.ts
@@ -90,23 +96,23 @@ project-root/
 │       │   ├── app/                         # App Router
 │       │   │   ├── layout.tsx
 │       │   │   ├── page.tsx
-│       │   │   └── tasks/
-│       │   ├── components/                  # UIコンポーネント
+│       │   │   └── <ctx>/
+│       │   ├── components/
 │       │   │   ├── ui/                      # shadcn/ui コンポーネント
 │       │   │   └── features/                # 機能単位コンポーネント
 │       │   └── lib/                         # ユーティリティ・APIクライアント
 │       ├── e2e/                             # E2E テスト（Playwright）
 │       │   ├── playwright.config.ts
-│       │   ├── smoke/                       # スモークテスト（ページ正常表示確認）
-│       │   ├── scenarios/                   # シナリオテスト（正常系・異常系）
+│       │   ├── smoke/
+│       │   ├── scenarios/
 │       │   │   └── <ctx>/
-│       │   └── fixtures/                    # DB セットアップ・teardown
+│       │   └── fixtures/
 │       ├── public/
 │       ├── package.json
 │       ├── tsconfig.json
 │       └── next.config.ts
 │
-├── packages/                                # 📦 共有パッケージ
+├── packages/                                # 共有パッケージ
 │   └── shared/                              # フロント・バック共通
 │       ├── src/
 │       │   ├── types/                       # APIリクエスト/レスポンス型
@@ -120,7 +126,8 @@ project-root/
 │       └── ci.yml
 │
 ├── package.json                             # Bun workspaces ルート
-├── biome.json                               # 共通Lint/Format設定
+├── biome.json
 ├── CLAUDE.md
 ├── README.md
 └── .gitignore
+```

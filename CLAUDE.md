@@ -6,13 +6,14 @@
 
 ### 参照ファイル（作業前に必ず読むこと）
 
-- ディレクトリ構造：`docs/01_project/directory-structure.md`
+- ディレクトリ構造（汎用）：`docs/00_governance/directory-structure.md`
+- ディレクトリ構造（具体）：`docs/01_project/directory-structure.md`
 - 技術スタック：`docs/01_project/tech-stack.md`
 - ローカルセットアップ：`docs/01_project/local-setup.md`（初回セットアップ時）
 
 ### 詳細ルール（該当作業時に必ず読むこと）
 
-- 実装順序：`docs/01_project/implementation-order.md`（新規コンテキスト実装時）
+- 実装順序：`docs/00_governance/implementation-order.md` / `docs/01_project/implementation-order.md`（新規コンテキスト実装時）
 - 命名規則：`docs/00_governance/naming-conventions.md`（アプリケーション層実装時）
 - テストポリシー：`docs/00_governance/test-policy.md`（テスト作成・修正時）
 - E2Eテストポリシー：`docs/01_project/e2e-policy.md`（E2Eテスト作成・修正時）
