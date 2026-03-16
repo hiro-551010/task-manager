@@ -31,16 +31,15 @@ tests/
       external/
     contract/
       http/
-
-  e2e/
-    scenarios/
 ```
+
+E2E テストはフロントエンド（`apps/web/e2e/`）に配置する。詳細は `docs/01_project/e2e-policy.md` を参照。
 
 - `tests/_shared` はテスト専用共通。`shared_kernel/` とは別。
 - unit は domain と application を分離。
 - integration は DB / Repo / migration を担保。
 - contract は API 入出力の固定。
-- e2e はクリティカルパスのみ。
+- e2e はフロントエンド側で管理し、クリティカルパスのみ。
 
 ---
 

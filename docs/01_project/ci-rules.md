@@ -20,6 +20,7 @@
 
 - `shared_kernel/**`
 - `docs/00_governance/**`
+- `docs/01_project/**`
 - `tools/architecture-tests/**`
 - `bootstrap/**`
 - CI設定（`.github/workflows/**`）
