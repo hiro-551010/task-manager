@@ -45,16 +45,9 @@
 
 ## 2. Obsidian 運用
 
-`docs/` が正式ドキュメント（正本）であるのに対し、`notes/` は正式化する前の思考・共有の場として Obsidian で管理する。
+詳細は `docs/00_governance/notes-policy.md` を参照すること。
 
-| 用途 | 場所 |
-|---|---|
-| 実装中の気づき・TIL | `notes/til/` |
-| バグ調査・技術調査ログ | `notes/investigation/` |
-| ADR化前の議論 | `notes/discussion/` |
-| ミーティングノート | `notes/meetings/` |
-
-議論・調査が合意に至った場合は `docs/` または `docs/20_decisions/` に昇格させる。
+`docs/` が正式ドキュメント（正本）であるのに対し、`notes/` は正式化する前の思考・共有の場として Obsidian で管理する。議論・調査が合意に至った場合は `docs/` または `docs/20_decisions/` に昇格させる。
 
 ---
 
