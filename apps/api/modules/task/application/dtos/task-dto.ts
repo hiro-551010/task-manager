@@ -2,6 +2,7 @@ import type { Task } from "../../domain/aggregates/task";
 
 export type TaskDto = {
   id: string;
+  ownerId: string;
   title: string;
   status: "todo" | "in_progress" | "done";
   dueDate: string | null;
@@ -11,6 +12,7 @@ export type TaskDto = {
 
 export const toTaskDto = (task: Task): TaskDto => ({
   id: task.id.value,
+  ownerId: task.ownerId.value,
   title: task.title,
   status: task.status,
   dueDate: task.dueDate?.toISOString() ?? null,

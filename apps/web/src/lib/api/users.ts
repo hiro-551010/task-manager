@@ -17,6 +17,8 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
 export const usersApi = {
   getAll: () => request<UserDto[]>("/users", { cache: "no-store" }),
   getOne: (id: string) => request<UserDto>(`/users/${id}`),
+  create: (input: RegisterUserInput) =>
+    request<UserDto>("/users", { method: "POST", body: JSON.stringify(input) }),
   register: (input: RegisterUserInput) =>
     request<UserDto>("/users", { method: "POST", body: JSON.stringify(input) }),
   update: (id: string, input: UpdateUserInput) =>

@@ -4,6 +4,7 @@ import { Task } from "../../domain/aggregates/task";
 import type { TaskRepository } from "../../domain/repositories/task-repository";
 import { TaskId } from "../../domain/value-objects/task-id";
 import type { TaskStatusValue } from "../../domain/value-objects/task-status";
+import type { UserId } from "../../domain/value-objects/user-id";
 import { db } from "./db";
 import { tasks } from "./schema";
 
@@ -18,9 +19,9 @@ export class DrizzleTaskRepository implements TaskRepository {
     }
   }
 
-  async findAll(): Promise<Task[]> {
+  async findAllByOwner(ownerId: UserId): Promise<Task[]> {
     try {
-      const records = await db.select().from(tasks);
+      const records = await db.select().from(tasks).where(eq(tasks.userId, ownerId.value));
       return records.map((r) => this.toDomain(r));
     } catch (error) {
       throw new InfrastructureError(
@@ -37,6 +38,7 @@ export class DrizzleTaskRepository implements TaskRepository {
         .insert(tasks)
         .values({
           id: task.id.value,
+          userId: task.ownerId.value,
           title: task.title,
           status: task.status,
           dueDate: task.dueDate,
@@ -68,6 +70,7 @@ export class DrizzleTaskRepository implements TaskRepository {
   private toDomain(record: typeof tasks.$inferSelect): Task {
     return Task.reconstruct({
       id: record.id,
+      ownerId: record.userId,
       title: record.title,
       status: record.status as TaskStatusValue,
       dueDate: record.dueDate ?? null,

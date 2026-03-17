@@ -8,6 +8,7 @@ export class CreateTaskHandler {
 
   async handle(command: Create): Promise<TaskDto> {
     const task = Task.create({
+      ownerId: command.userId,
       title: command.title,
       dueDate: command.dueDate ? new Date(command.dueDate) : undefined,
     });
