@@ -1,4 +1,8 @@
-# 実装順序
+# 実装順序（汎用）
+
+プロジェクト固有のスタック詳細は `docs/01_project/implementation-order.md` を参照すること。
+
+---
 
 ## 順序
 

@@ -57,10 +57,12 @@ Bun workspaces によるモノレポ。
 | 役割 | 技術 |
 |---|---|
 | パッケージマネージャー / ワークスペース | Bun workspaces |
-| テスト | Vitest |
+| テスト（ユニット / インテグレーション） | Vitest |
+| E2E テスト | Playwright |
 | Lint | Biome |
 | フォーマット | Biome |
 | DB（ローカル） | Docker Compose + PostgreSQL |
+| DB（テスト用） | Docker Compose + PostgreSQL（port 5433、`db-test` サービス） |
 
 ---
 
@@ -127,6 +129,4 @@ docker compose up -d             # ローカル DB 起動
 | Context | 説明 |
 |---|---|
 | `task` | タスクの CRUD・ステータス遷移・期限管理 |
-| `user` | ユーザー管理・認証（フェーズ2以降） |
-
-初期実装は `task` コンテキストのみ。
+| `user` | ユーザー管理・認証 |

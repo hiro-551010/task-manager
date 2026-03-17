@@ -20,6 +20,7 @@
 
 - `shared_kernel/**`
 - `docs/00_governance/**`
+- `docs/01_project/**`
 - `tools/architecture-tests/**`
 - `bootstrap/**`
 - CI設定（`.github/workflows/**`）
@@ -33,14 +34,14 @@
 - `tests/<ctx>/unit/**`（必須）
 - `tests/<ctx>/integration/**`（必須：infra/DB/migrations変更がある場合。推奨は常に実行）
 - `tests/<ctx>/contract/**`（必須：presentation/http または interfaces/api.md が変更された場合）
-- e2e は原則スキップ（nightlyで実行）
+- e2e は `apps/web/**` または `apps/api/**` の変更がある PR で自動実行（詳細は `docs/01_project/e2e-policy.md` を参照）
 
 ---
 
 ## 常に実行するチェック（全PR）
 
 - lint / format
-- `tools/architecture-tests/**`（依存ルール違反検知）
+- `tools/architecture-tests/**`（依存ルール違反検知）※未実装・今後導入予定
 - unit（全体 or 変更ctx）
   - 推奨：unitは全体（速い場合）
   - 重い場合：変更ctxのみ

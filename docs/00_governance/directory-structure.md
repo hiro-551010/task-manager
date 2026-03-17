@@ -1,126 +1,98 @@
-project-root/
-├── .obsidian/                               # Obsidian設定（Vault化の中核）
-│
-├── notes/                                   # 📝 非公式ノート（Obsidianで管理）
-│   ├── til/                                 # 実装中の気づき・TIL
-│   ├── investigation/                       # バグ調査・技術調査ログ
-│   ├── discussion/                          # ADR化前の議論
-│   └── meetings/                            # ミーティングノート
-│
-├── docs/                                    # 🧠 設計・仕様（正本）
-│   ├── 00_governance/
-│   │   ├── operating-model.md               # 運用ルール（Docsゲート/PR/ブランチ等）
-│   │   └── templates/
-│   │       ├── adr-template.md
-│   │       └── context-template.md
-│   │
-│   ├── 10_contexts/                         # bounded-context単位の設計（コードと1:1）
-│   │   └── <ctx>/                           # 例: task / user ...
-│   │       ├── _index.md                    # 入口（必須）
-│   │       ├── context.md                   # 境界/責務/依存
-│   │       ├── domain/
-│   │       │   ├── model.md                 # 集約/Entity/VO
-│   │       │   ├── rules.md                 # 不変条件/バリデーション
-│   │       │   └── events.md                # ドメインイベント（必要なら）
-│   │       ├── application/
-│   │       │   └── use-cases.md             # コマンド/クエリ/入出力
-│   │       ├── interfaces/
-│   │       │   └── api.md                   # API契約
-│   │       ├── data/
-│   │       │   └── schema.md                # DBスキーマ/移行方針（Expand/Contract）
-│   │       └── adr/                         # ctx固有ADR
-│   │
-│   ├── 20_decisions/                        # 全体ADR（横断意思決定）
-│   │   ├── adr-index.md
-│   │   └── 2026-xx-xx-adr-0001.md
-│   │
-│   └── 30_frontend/                         # 🖥️ フロントエンド設計（apps/web と1:1）
-│       ├── architecture.md                  # 全体アーキテクチャ（RSC/Server Actions/レイヤー構成）
-│       └── <ctx>/                           # bounded-context 対応の UI 設計
-│           └── _index.md                    # ページ・コンポーネント設計
-│
-├── apps/                                    # 🚀 アプリケーション
-│   ├── api/                                 # バックエンド（Hono + DDD）
-│   │   ├── modules/                         # bounded-context実装
-│   │   │   └── <ctx>/
-│   │   │       ├── domain/
-│   │   │       ├── application/
-│   │   │       ├── infrastructure/
-│   │   │       └── presentation/
-│   │   │
-│   │   ├── shared_kernel/                   # 🔒 Shared Kernel（API内共通）
-│   │   │   ├── types/
-│   │   │   ├── errors/
-│   │   │   ├── ids/
-│   │   │   ├── datetime/
-│   │   │   └── utils/
-│   │   │
-│   │   ├── migrations/                      # DB移行（ctx単位）
-│   │   │   └── <ctx>/
-│   │   │
-│   │   ├── tests/                           # テスト
-│   │   │   ├── _shared/
-│   │   │   │   ├── builders/
-│   │   │   │   ├── fixtures/
-│   │   │   │   ├── fakes/
-│   │   │   │   ├── matchers/
-│   │   │   │   └── testkit/
-│   │   │   ├── <ctx>/
-│   │   │   │   ├── unit/
-│   │   │   │   │   ├── domain/
-│   │   │   │   │   └── application/
-│   │   │   │   ├── integration/
-│   │   │   │   │   ├── persistence/
-│   │   │   │   │   ├── migrations/
-│   │   │   │   │   └── external/
-│   │   │   │   └── contract/
-│   │   │   │       └── http/
-│   │   │   └── e2e/
-│   │   │       └── scenarios/
-│   │   │
-│   │   ├── tools/
-│   │   │   └── architecture-tests/
-│   │   ├── index.ts                         # エントリポイント
-│   │   ├── package.json
-│   │   ├── tsconfig.json
-│   │   └── drizzle.config.ts
-│   │
-│   └── web/                                 # フロントエンド（Next.js）
-│       ├── src/
-│       │   ├── app/                         # App Router
-│       │   │   ├── layout.tsx
-│       │   │   ├── page.tsx
-│       │   │   └── tasks/
-│       │   ├── components/                  # UIコンポーネント
-│       │   │   ├── ui/                      # shadcn/ui コンポーネント
-│       │   │   └── features/                # 機能単位コンポーネント
-│       │   └── lib/                         # ユーティリティ・APIクライアント
-│       ├── e2e/                             # E2E テスト（Playwright）
-│       │   ├── playwright.config.ts
-│       │   ├── smoke/                       # スモークテスト（ページ正常表示確認）
-│       │   ├── scenarios/                   # シナリオテスト（正常系・異常系）
-│       │   │   └── <ctx>/
-│       │   └── fixtures/                    # DB セットアップ・teardown
-│       ├── public/
-│       ├── package.json
-│       ├── tsconfig.json
-│       └── next.config.ts
-│
-├── packages/                                # 📦 共有パッケージ
-│   └── shared/                              # フロント・バック共通
-│       ├── src/
-│       │   ├── types/                       # APIリクエスト/レスポンス型
-│       │   ├── schemas/                     # Zodスキーマ（共通バリデーション）
-│       │   └── constants/                   # 共通定数
-│       └── package.json
-│
-├── .github/
-│   ├── pull_request_template.md
-│   └── workflows/
-│       └── ci.yml
-│
-├── package.json                             # Bun workspaces ルート
-├── biome.json                               # 共通Lint/Format設定
-├── CLAUDE.md
-├── README.md
-└── .gitignore
+# ディレクトリ構造（汎用）
+
+プロジェクト固有の具体的なディレクトリツリーは `docs/01_project/directory-structure.md` を参照すること。
+
+---
+
+## ドキュメント構造
+
+```
+docs/
+├── 00_governance/     # 汎用ガバナンス原則（技術スタック非依存）
+├── 01_project/        # プロジェクト固有設定（技術スタック・ディレクトリ構造等）
+├── 10_contexts/       # Bounded Context 単位の設計（コードと 1:1 対応）
+│   └── <ctx>/
+│       ├── _index.md          # 入口（必須）
+│       ├── context.md         # 境界 / 責務 / 依存
+│       ├── domain/
+│       │   ├── model.md       # 集約 / Entity / VO
+│       │   ├── rules.md       # 不変条件 / バリデーション
+│       │   └── events.md      # ドメインイベント（必要なら）
+│       ├── application/
+│       │   └── use-cases.md   # コマンド / クエリ / 入出力
+│       ├── interfaces/
+│       │   └── api.md         # API 契約
+│       ├── data/
+│       │   └── schema.md      # DB スキーマ / 移行方針
+│       └── adr/               # ctx 固有 ADR
+├── 20_decisions/      # 全体 ADR（横断意思決定）
+└── 30_frontend/       # フロントエンド設計（Web アプリがある場合）
+    └── <ctx>/
+        └── _index.md  # ページ・コンポーネント設計
+```
+
+---
+
+## コード構造（DDD レイヤー）
+
+各 Bounded Context は以下の 4 層で実装する。
+
+```
+<ctx>/
+├── domain/          # ドメイン層（外部ライブラリ依存禁止）
+├── application/     # アプリケーション層（domain のみ依存可）
+├── infrastructure/  # インフラ層（domain の Repository IF を実装）
+└── presentation/    # プレゼンテーション層（application を呼び出す）
+```
+
+---
+
+## Shared Kernel
+
+複数の Bounded Context から参照される薄い共通基盤。ドメイン知識を含めない。
+（詳細は `docs/00_governance/shared-kernel-rules.md` を参照）
+
+```
+shared_kernel/
+├── types/
+├── errors/
+├── ids/
+├── datetime/
+└── utils/
+```
+
+---
+
+## テスト構造
+
+```
+tests/
+├── _shared/           # テスト専用共通ユーティリティ（shared_kernel とは別）
+│   ├── builders/
+│   ├── fixtures/
+│   ├── fakes/
+│   ├── matchers/
+│   └── testkit/
+└── <ctx>/
+    ├── unit/
+    │   ├── domain/
+    │   └── application/
+    ├── integration/
+    │   ├── persistence/
+    │   ├── migrations/
+    │   └── external/
+    └── contract/
+        └── http/
+```
+
+---
+
+## notes/ 構造（Obsidian）
+
+```
+notes/
+├── til/             # 実装中の気づき・TIL
+├── investigation/   # バグ調査・技術調査ログ
+├── discussion/      # ADR 化前の議論
+└── meetings/        # ミーティングノート
+```

@@ -1,25 +1,27 @@
 # Claude Code Operating Model（DDD + Obsidian運用）
 
-**設計方針：** このファイルは特定の技術スタックに依存しない粒度で記述する。プロジェクト固有のものはdocs/00_governance直下に集約し、そのファイルパスをCLAUDE.mdに記述する。
+**設計方針：** このファイルは特定の技術スタックに依存しない粒度で記述する。汎用ガバナンスは `docs/00_governance/`、プロジェクト固有の設定は `docs/01_project/` に集約し、そのファイルパスを CLAUDE.md に記述する。
 
 ## 0. Claude Codeへの指示
 
 ### 参照ファイル（作業前に必ず読むこと）
 
-- ディレクトリ構造：`docs/00_governance/directory-structure.md`
-- 技術スタック：`docs/00_governance/tech-stack.md`
-- ローカルセットアップ：`docs/00_governance/local-setup.md`（初回セットアップ時）
+- ディレクトリ構造（汎用）：`docs/00_governance/directory-structure.md`
+- ディレクトリ構造（具体）：`docs/01_project/directory-structure.md`
+- 技術スタック：`docs/01_project/tech-stack.md`
+- ローカルセットアップ：`docs/01_project/local-setup.md`（初回セットアップ時）
 
 ### 詳細ルール（該当作業時に必ず読むこと）
 
-- 実装順序：`docs/00_governance/implementation-order.md`（新規コンテキスト実装時）
+- 実装順序：`docs/00_governance/implementation-order.md` / `docs/01_project/implementation-order.md`（新規コンテキスト実装時）
 - 命名規則：`docs/00_governance/naming-conventions.md`（アプリケーション層実装時）
 - テストポリシー：`docs/00_governance/test-policy.md`（テスト作成・修正時）
-- E2Eテストポリシー：`docs/00_governance/e2e-policy.md`（E2Eテスト作成・修正時）
+- E2Eテストポリシー：`docs/01_project/e2e-policy.md`（E2Eテスト作成・修正時）
 - 例外処理ポリシー：`docs/00_governance/error-policy.md`（実装時）
 - Shared Kernelルール：`docs/00_governance/shared-kernel-rules.md`（`shared_kernel/` 変更時）
-- CIルール：`docs/00_governance/ci-rules.md`（CI設定・ワークフロー変更時）
+- CIルール：`docs/01_project/ci-rules.md`（CI設定・ワークフロー変更時）
 - Git運用ルール：`docs/00_governance/git-rules.md`（ブランチ作成・コミット・PRマージ時）
+- フロントエンド原則：`docs/00_governance/frontend-principles.md`（フロントエンド実装時）
 
 ### 振る舞いルール
 
@@ -29,7 +31,7 @@
 - `shared_kernel/` への追加を求められたら `docs/00_governance/shared-kernel-rules.md` を確認する。
 - 変更範囲が不明な場合は実装前にユーザーに確認する。
 - 仕様が未更新のまま実装を求められた場合は、先にドキュメント更新を促す。
-- **`feature/` ブランチ作業中に `docs/00_governance/` または `CLAUDE.md` の変更が必要になった場合は、必ず作業を中断し、5.6 のワークフローに従うこと。**
+- **`feature/` ブランチ作業中に `docs/00_governance/` または `CLAUDE.md` の変更が必要になった場合は、必ず作業を中断し、5.6 のワークフローに従うこと。`docs/01_project/` の変更は `chore/` ブランチで対応する。**
 
 ---
 
@@ -44,16 +46,9 @@
 
 ## 2. Obsidian 運用
 
-`docs/` が正式ドキュメント（正本）であるのに対し、`notes/` は正式化する前の思考・共有の場として Obsidian で管理する。
+詳細は `docs/00_governance/notes-policy.md` を参照すること。
 
-| 用途 | 場所 |
-|---|---|
-| 実装中の気づき・TIL | `notes/til/` |
-| バグ調査・技術調査ログ | `notes/investigation/` |
-| ADR化前の議論 | `notes/discussion/` |
-| ミーティングノート | `notes/meetings/` |
-
-議論・調査が合意に至った場合は `docs/` または `docs/20_decisions/` に昇格させる。
+`docs/` が正式ドキュメント（正本）であるのに対し、`notes/` は正式化する前の思考・共有の場として Obsidian で管理する。議論・調査が合意に至った場合は `docs/` または `docs/20_decisions/` に昇格させる。
 
 ---
 
@@ -100,13 +95,14 @@
 
 1. `develop` からブランチを作成する。
 2. 対象 bounded-context とレイヤーを特定する。
-3. 該当ドキュメントを更新する。
-4. **Docs ゲート**：以下を確認してから実装に進む。
+3. 該当ドキュメントを作成・更新し、コミットする（実装より先に行う）。
+4. **Docs ゲート**：ドキュメントが揃っていることを以下のチェックリストで確認し、ユーザーに提示してレビューを求める。
    - domain 変更 → `docs/10_contexts/<ctx>/domain/model.md` `docs/10_contexts/<ctx>/domain/rules.md` が更新済みか
    - ユースケース追加・変更 → `docs/10_contexts/<ctx>/application/use-cases.md` が更新済みか
    - API 変更 → `docs/10_contexts/<ctx>/interfaces/api.md` が更新済みか
    - DB 変更 → `docs/10_contexts/<ctx>/data/schema.md` が更新済みか
-5. 自己レビューで Docs ゲートを確認後、実装する。
+   - **ユーザーの指示に「確認不要」「確認をスキップ」等が明記されている場合は、このレビュー待ちをスキップして実装に進んでよい。**
+5. ユーザーの承認後、実装する。
 6. テストを実行する。
 7. PR を作成し、docs と code が一致していることを確認する。
 8. PR を `develop` にマージ（Squash merge）後、ブランチを削除する。
@@ -138,12 +134,12 @@
 | 項目 | 内容 |
 |---|---|
 | ブランチ | `chore/<slug>` |
-| Docs ゲート | 不要（`docs/00_governance/` の更新は必要に応じて行う） |
+| Docs ゲート | 不要（`docs/01_project/` の更新は必要に応じて行う） |
 | マージ先 | `develop`（Squash merge） |
 
 1. `develop` からブランチを作成する。
 2. 変更を実施する。
-3. 影響があれば `docs/00_governance/` 内の該当ファイルを更新する。
+3. 影響があれば `docs/01_project/` 内の該当ファイルを更新する。
 4. PR を作成し `develop` にマージする。
 
 ---
@@ -185,6 +181,8 @@ main / develop に未実装の仕様のみを反映してはならない。
 - `docs/00_governance/` 配下のファイルを新規作成・変更する必要がある
 - `CLAUDE.md` を変更する必要がある
 - `docs/30_frontend/architecture.md` などの全体設計ドキュメントを変更する必要がある
+
+**`docs/01_project/` の変更が必要になった場合は `chore/` ブランチで対応する（governance 割り込みは不要）。**
 
 **割り込み不要なケース（feature ブランチ内で完結してよい）：**
 
