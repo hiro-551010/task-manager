@@ -21,6 +21,7 @@
 - Shared Kernelルール：`docs/00_governance/shared-kernel-rules.md`（`shared_kernel/` 変更時）
 - CIルール：`docs/01_project/ci-rules.md`（CI設定・ワークフロー変更時）
 - Git運用ルール：`docs/00_governance/git-rules.md`（ブランチ作成・コミット・PRマージ時）
+- フロントエンド原則：`docs/00_governance/frontend-principles.md`（フロントエンド実装時）
 
 ### 振る舞いルール
 
