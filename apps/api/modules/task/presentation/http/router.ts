@@ -2,6 +2,7 @@ import { Hono } from "hono";
 import { z } from "zod";
 import { zValidator } from "@hono/zod-validator";
 import type { TaskContainer } from "../../infrastructure/persistence/container";
+import type { AuthVariables } from "@/modules/auth/presentation/http/middleware";
 import { handleError } from "./error-handler";
 
 const createSchema = z.object({
@@ -19,11 +20,12 @@ const changeStatusSchema = z.object({
 });
 
 export const createTaskRouter = (container: TaskContainer) => {
-  const router = new Hono();
+  const router = new Hono<{ Variables: AuthVariables }>();
 
   router.get("/", async (c) => {
     try {
-      const tasks = await container.getAllTasks.handle();
+      const userId = c.get("userId");
+      const tasks = await container.getAllTasks.handle({ userId });
       return c.json(tasks, 200);
     } catch (err) {
       return handleError(err, c);
@@ -32,7 +34,8 @@ export const createTaskRouter = (container: TaskContainer) => {
 
   router.get("/:id", async (c) => {
     try {
-      const task = await container.getTask.handle({ id: c.req.param("id") });
+      const userId = c.get("userId");
+      const task = await container.getTask.handle({ userId, id: c.req.param("id") });
       return c.json(task, 200);
     } catch (err) {
       return handleError(err, c);
@@ -41,8 +44,9 @@ export const createTaskRouter = (container: TaskContainer) => {
 
   router.post("/", zValidator("json", createSchema), async (c) => {
     try {
+      const userId = c.get("userId");
       const body = c.req.valid("json");
-      const task = await container.createTask.handle(body);
+      const task = await container.createTask.handle({ userId, ...body });
       return c.json(task, 201);
     } catch (err) {
       return handleError(err, c);
@@ -51,8 +55,9 @@ export const createTaskRouter = (container: TaskContainer) => {
 
   router.patch("/:id", zValidator("json", updateSchema), async (c) => {
     try {
+      const userId = c.get("userId");
       const body = c.req.valid("json");
-      const task = await container.updateTask.handle({ id: c.req.param("id"), ...body });
+      const task = await container.updateTask.handle({ userId, id: c.req.param("id"), ...body });
       return c.json(task, 200);
     } catch (err) {
       return handleError(err, c);
@@ -61,8 +66,13 @@ export const createTaskRouter = (container: TaskContainer) => {
 
   router.patch("/:id/status", zValidator("json", changeStatusSchema), async (c) => {
     try {
+      const userId = c.get("userId");
       const body = c.req.valid("json");
-      const task = await container.changeTaskStatus.handle({ id: c.req.param("id"), ...body });
+      const task = await container.changeTaskStatus.handle({
+        userId,
+        id: c.req.param("id"),
+        ...body,
+      });
       return c.json(task, 200);
     } catch (err) {
       return handleError(err, c);
@@ -71,7 +81,8 @@ export const createTaskRouter = (container: TaskContainer) => {
 
   router.delete("/:id", async (c) => {
     try {
-      await container.deleteTask.handle({ id: c.req.param("id") });
+      const userId = c.get("userId");
+      await container.deleteTask.handle({ userId, id: c.req.param("id") });
       return c.body(null, 204);
     } catch (err) {
       return handleError(err, c);

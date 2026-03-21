@@ -23,10 +23,14 @@ src/
 ├── app/                            # ルーティング + RSC（データ取得のみ）
 │   ├── layout.tsx
 │   ├── page.tsx
-│   └── <ctx>/                      # bounded-context 単位のルート
+│   ├── auth/                       # 認証ページ（未認証ユーザー向け）
+│   │   └── page.tsx
+│   └── <ctx>/                      # bounded-context 単位のルート（認証必須）
 │       ├── page.tsx                # 一覧ページ（RSC）
 │       └── [id]/
 │           └── page.tsx            # 詳細ページ（RSC）
+│
+├── middleware.ts                   # 認証チェック・リダイレクト
 │
 ├── components/
 │   ├── ui/                         # shadcn/ui プリミティブ（自動生成）
@@ -116,9 +120,22 @@ app/<ctx>/page.tsx（RSC）
 
 ---
 
+## 認証フロー
+
+`middleware.ts` が全リクエストを interceptして認証状態を確認する。
+
+- `/auth` は認証不要
+- それ以外のルートは `session_id` Cookie の有無を `GET /auth/session` で確認
+- 無効な場合は `/auth` にリダイレクト
+
+詳細は `docs/30_frontend/auth/_index.md` を参照。
+
+---
+
 ## 関連ドキュメント
 
 - アーキテクチャ原則（汎用）：`docs/00_governance/frontend-principles.md`
 - 技術スタック：`docs/01_project/tech-stack.md`
 - bounded-context 単位の UI 設計：`docs/30_frontend/<ctx>/_index.md`
+- 認証ページ設計：`docs/30_frontend/auth/_index.md`
 - バックエンド API 契約：`docs/10_contexts/<ctx>/interfaces/api.md`

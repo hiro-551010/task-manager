@@ -1,6 +1,7 @@
 import type { Task } from "@/modules/task/domain/aggregates/task";
 import type { TaskRepository } from "@/modules/task/domain/repositories/task-repository";
 import type { TaskId } from "@/modules/task/domain/value-objects/task-id";
+import type { UserId } from "@/modules/task/domain/value-objects/user-id";
 
 export class FakeTaskRepository implements TaskRepository {
   private store = new Map<string, Task>();
@@ -9,8 +10,8 @@ export class FakeTaskRepository implements TaskRepository {
     return this.store.get(id.value) ?? null;
   }
 
-  async findAll(): Promise<Task[]> {
-    return [...this.store.values()];
+  async findAllByOwner(ownerId: UserId): Promise<Task[]> {
+    return [...this.store.values()].filter((t) => t.ownerId.value === ownerId.value);
   }
 
   async save(task: Task): Promise<void> {

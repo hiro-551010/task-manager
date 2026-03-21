@@ -3,12 +3,14 @@ import { DueDate } from "../value-objects/due-date";
 import { TaskId } from "../value-objects/task-id";
 import { TaskStatus, type TaskStatusValue } from "../value-objects/task-status";
 import { Title } from "../value-objects/title";
+import { UserId } from "../value-objects/user-id";
 
 export class Task {
   private _domainEvents: TaskDomainEvent[] = [];
 
   private constructor(
     readonly id: TaskId,
+    readonly ownerId: UserId,
     private _title: Title,
     private _status: TaskStatus,
     private _dueDate: DueDate | null,
@@ -16,10 +18,11 @@ export class Task {
     private _updatedAt: Date,
   ) {}
 
-  static create(params: { title: string; dueDate?: Date }): Task {
+  static create(params: { ownerId: string; title: string; dueDate?: Date }): Task {
     const now = new Date();
     const task = new Task(
       TaskId.generate(),
+      UserId.reconstruct(params.ownerId),
       Title.create(params.title),
       TaskStatus.initial(),
       params.dueDate ? DueDate.create(params.dueDate) : null,
@@ -37,6 +40,7 @@ export class Task {
 
   static reconstruct(params: {
     id: string;
+    ownerId: string;
     title: string;
     status: TaskStatusValue;
     dueDate: Date | null;
@@ -45,6 +49,7 @@ export class Task {
   }): Task {
     return new Task(
       TaskId.reconstruct(params.id),
+      UserId.reconstruct(params.ownerId),
       Title.create(params.title),
       TaskStatus.reconstruct(params.status),
       params.dueDate ? DueDate.reconstruct(params.dueDate) : null,

@@ -8,6 +8,7 @@
 **入力**
 | フィールド | 型 | 必須 | 説明 |
 |---|---|---|---|
+| userId | string | ✓ | 作成者のユーザーID（セッションから取得） |
 | title | string | ✓ | タイトル（1〜100文字） |
 | dueDate | string (ISO 8601) | | 期限 |
 
@@ -24,6 +25,7 @@
 **入力**
 | フィールド | 型 | 必須 | 説明 |
 |---|---|---|---|
+| userId | string | ✓ | 操作者のユーザーID（セッションから取得） |
 | id | string | ✓ | タスクID |
 | title | string | | タイトル |
 | dueDate | string (ISO 8601) \| null | | 期限（null で削除） |
@@ -31,7 +33,7 @@
 **出力**：更新後の `TaskDto`
 
 **エラー**
-- `ApplicationError`：タスクが存在しない
+- `ApplicationError`：タスクが存在しない / 他ユーザーのタスク
 - `DomainError`：バリデーション違反
 
 ---
@@ -42,13 +44,14 @@
 **入力**
 | フィールド | 型 | 必須 | 説明 |
 |---|---|---|---|
+| userId | string | ✓ | 操作者のユーザーID（セッションから取得） |
 | id | string | ✓ | タスクID |
 | status | `todo` \| `in_progress` \| `done` | ✓ | 変更後のステータス |
 
 **出力**：更新後の `TaskDto`
 
 **エラー**
-- `ApplicationError`：タスクが存在しない
+- `ApplicationError`：タスクが存在しない / 他ユーザーのタスク
 - `DomainError`：許可されていないステータス遷移
 
 ---
@@ -59,12 +62,13 @@
 **入力**
 | フィールド | 型 | 必須 | 説明 |
 |---|---|---|---|
+| userId | string | ✓ | 操作者のユーザーID（セッションから取得） |
 | id | string | ✓ | タスクID |
 
 **出力**：なし
 
 **エラー**
-- `ApplicationError`：タスクが存在しない
+- `ApplicationError`：タスクが存在しない / 他ユーザーのタスク
 
 ---
 
@@ -73,19 +77,19 @@
 ### Get
 IDでタスクを1件取得する。
 
-**入力**：`id: string`
+**入力**：`{ userId: string, id: string }`
 
 **出力**：`TaskDto`
 
 **エラー**
-- `ApplicationError`：タスクが存在しない
+- `ApplicationError`：タスクが存在しない / 他ユーザーのタスク
 
 ---
 
 ### GetAll
-全タスクを取得する。
+ログインユーザーが所有するタスクを全件取得する。
 
-**入力**：なし
+**入力**：`{ userId: string }`
 
 **出力**：`TaskDto[]`
 
@@ -97,6 +101,7 @@ IDでタスクを1件取得する。
 ```ts
 type TaskDto = {
   id: string;
+  ownerId: string;
   title: string;
   status: "todo" | "in_progress" | "done";
   dueDate: string | null; // ISO 8601

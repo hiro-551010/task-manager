@@ -13,14 +13,9 @@ type ErrorResponse = {
 
 const errorResponse = (c: Context, status: number, code: string, message: string): Response => {
   const body: ErrorResponse = {
-    error: {
-      code,
-      message,
-      details: {},
-      trace_id: generateUlid(),
-    },
+    error: { code, message, details: {}, trace_id: generateUlid() },
   };
-  return c.json(body, status as 400 | 404 | 500 | 503);
+  return c.json(body, status as 400 | 403 | 404 | 500 | 503);
 };
 
 export const handleError = (err: unknown, c: Context): Response => {
@@ -28,8 +23,9 @@ export const handleError = (err: unknown, c: Context): Response => {
     return errorResponse(c, 400, err.code, err.message);
   }
   if (err instanceof ApplicationError) {
-    const status = err.code.endsWith("not_found") ? 404 : 400;
-    return errorResponse(c, status, err.code, err.message);
+    if (err.code === "task.forbidden") return errorResponse(c, 403, err.code, err.message);
+    if (err.code.endsWith("not_found")) return errorResponse(c, 404, err.code, err.message);
+    return errorResponse(c, 400, err.code, err.message);
   }
   if (err instanceof InfrastructureError) {
     console.error("[InfrastructureError]", err);

@@ -46,3 +46,32 @@
 2. 名前を更新・保存
 
 **出力:** `UserDto`
+
+---
+
+## Login（ログイン）
+
+**コマンド:** `{ email: string, password: string }`
+
+**処理:**
+1. メールアドレスでユーザーを検索（存在しなければ ApplicationError）
+2. パスワードを検証（`Bun.password.verify`、不一致なら ApplicationError）
+3. セッション ID（ULID）を生成・保存（sessions テーブル）
+4. セッション ID を httpOnly Cookie にセットして返す
+
+**出力:** `UserDto`（Cookie は response header にセット）
+
+**エラー:**
+- `ApplicationError`：メールアドレスまたはパスワードが不正（詳細は返さない）
+
+---
+
+## Logout（ログアウト）
+
+**コマンド:** `{ sessionId: string }`（Cookie から取得）
+
+**処理:**
+1. sessions テーブルからセッションを削除
+2. Cookie を削除（Max-Age=0 でセット）
+
+**出力:** なし

@@ -9,11 +9,14 @@
 | フィールド | 型 | 説明 |
 |---|---|---|
 | id | TaskId | タスクID（ULID） |
+| ownerId | UserId | タスクの所有者（user context の UserId） |
 | title | Title | タイトル |
 | status | TaskStatus | ステータス |
 | dueDate | DueDate \| null | 期限（任意） |
 | createdAt | Date | 作成日時 |
 | updatedAt | Date | 更新日時 |
+
+> `ownerId` は user context の `UserId` 型と同じ ULID 文字列だが、bounded context 間の直接依存を避けるため、task context 内では `UserId` 型として独立して定義する。
 
 ---
 
